@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import io.lightball.lightball.dialogs.AddPlayerDialog;
 import io.lightball.lightball.entities.Player;
 
 public class PlayfieldActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
@@ -24,11 +25,8 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Player playerToAdd = new Player("1","Alex",100);
-                ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam1))
-                        .addPlayerToTeam(playerToAdd);
-                Toast.makeText(PlayfieldActivity.this, "Player " + playerToAdd.name + " added to team 1", Toast.LENGTH_SHORT)
-                        .show();
+                AddPlayerDialog dialog = new AddPlayerDialog();
+                dialog.show(getSupportFragmentManager(),"ADD_PLAYER");
             }
         });
     }
@@ -59,4 +57,18 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
     public void onListFragmentInteraction(Player item) {
 
     }
+
+    public void addPlayerToTeam(Player player, int team){
+        TeamFragment teamFragment = null;
+        if(team == 1){
+            teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam1));
+        }else if(team == 2){
+            teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam2));
+        }
+        if(teamFragment != null){
+            teamFragment.addPlayerToTeam(player);
+            Toast.makeText(PlayfieldActivity.this, "Player " + player.name + " added to team " + team, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    };
 }

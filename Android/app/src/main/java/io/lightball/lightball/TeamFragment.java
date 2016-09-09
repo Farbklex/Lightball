@@ -2,6 +2,7 @@ package io.lightball.lightball;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,12 +26,15 @@ public class TeamFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String SAVED_PLAYERS = "saved-players";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<Player> mPlayers = new ArrayList<Player>();
+    private ArrayList<Player> mPlayers = new ArrayList<Player>();
     private RecyclerView mRecyclerView;
     private PlayerRecyclerViewAdapter mPlayerRecyclerViewAdapter;
+
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -76,6 +80,19 @@ public class TeamFragment extends Fragment {
         return mRecyclerView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(SAVED_PLAYERS, mPlayers);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            mPlayers = savedInstanceState.getParcelableArrayList(SAVED_PLAYERS);
+        }
+        super.onViewStateRestored(savedInstanceState);
+    }
 
     @Override
     public void onAttach(Context context) {
