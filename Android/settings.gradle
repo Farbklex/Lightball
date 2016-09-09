@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':adidas-sensors-api-release'
