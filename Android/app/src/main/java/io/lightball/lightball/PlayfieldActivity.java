@@ -2,14 +2,16 @@ package io.lightball.lightball;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-public class PlayfieldActivity extends AppCompatActivity {
+import io.lightball.lightball.entities.Player;
+
+public class PlayfieldActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +24,11 @@ public class PlayfieldActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Player playerToAdd = new Player("1","Alex",100);
+                ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam1))
+                        .addPlayerToTeam(playerToAdd);
+                Toast.makeText(PlayfieldActivity.this, "Player " + playerToAdd.name + " added to team 1", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }
@@ -48,5 +53,10 @@ public class PlayfieldActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Player item) {
+
     }
 }
