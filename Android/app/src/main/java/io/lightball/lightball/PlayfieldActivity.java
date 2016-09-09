@@ -1,5 +1,6 @@
 package io.lightball.lightball;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the actsion bar if it is present.
         getMenuInflater().inflate(R.menu.menu_playfield, menu);
         return true;
     }
@@ -46,8 +47,9 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_debug) {
+            Intent intent = new Intent(this, DebugActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

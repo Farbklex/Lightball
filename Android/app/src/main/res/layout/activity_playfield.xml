@@ -34,17 +34,10 @@
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:showIn="@layout/activity_playfield">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World! Ich bin eine Super App"
-            android:id="@+id/header"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/header"
             android:weightSum="2">
             <fragment android:id="@+id/playersTeam1"
                       android:name="io.lightball.lightball.TeamFragment"
@@ -69,6 +62,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email"/>
+        android:src="@android:drawable/ic_input_add"/>
 
 </android.support.design.widget.CoordinatorLayout>
