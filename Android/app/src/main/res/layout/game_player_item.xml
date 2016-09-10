@@ -13,6 +13,13 @@
         android:layout_centerVertical="true"
         android:src="@drawable/ic_portrait_black_24dp"/>
 
+    <ImageView
+        android:id="@+id/playerHealth"
+        android:layout_width="@dimen/player_portrait_size"
+        android:layout_height="@dimen/player_portrait_size"
+        android:layout_centerVertical="true"
+        android:background="#804CAF50"/>
+
     <TextView
         android:id="@+id/player_name"
         android:layout_width="wrap_content"
@@ -22,12 +29,5 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/player_portrait"/>
-
-    <ImageView
-        android:id="@+id/playerHealth"
-        android:layout_width="@dimen/player_portrait_size"
-        android:layout_height="@dimen/player_portrait_size"
-        android:layout_centerVertical="true"
-        android:background="#804CAF50"/>
 
 </RelativeLayout>

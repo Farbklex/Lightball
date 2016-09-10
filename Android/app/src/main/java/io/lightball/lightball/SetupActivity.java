@@ -70,7 +70,7 @@ public class SetupActivity extends AppCompatActivity implements TeamFragment.OnL
             teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam2));
         }
         if(teamFragment != null){
-            teamFragment.addPlayerToTeam(player);
+            teamFragment.addPlayerToTeam(player, team);
             Toast.makeText(SetupActivity.this, "Player " + player.name + " added to team " + team, Toast.LENGTH_SHORT)
                     .show();
         }

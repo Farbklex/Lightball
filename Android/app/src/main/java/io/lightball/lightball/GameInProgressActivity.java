@@ -9,12 +9,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.TextView;
+import java.util.ArrayList;
+
+import io.lightball.lightball.entities.Player;
+import io.lightball.lightball.interfaces.GameStateInterface;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class GameInProgressActivity extends AppCompatActivity {
+public class GameInProgressActivity extends AppCompatActivity
+    implements GameStateInterface {
+
+    ArrayList<View> mTeam1Views;
+    ArrayList<View> mTeam2Views;
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -112,6 +122,37 @@ public class GameInProgressActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        //Setup team 1
+        ArrayList<Player> team1 = GameStateManager.getInstance().getTeam1();
+        Player t1p1 = team1.get(0);
+        View t1p1View = findViewById(R.id.team1Player1);
+        t1p1View.setTag(t1p1.id);
+        ((TextView)t1p1View.findViewById(R.id.player_name)).setText(t1p1.name);
+
+        //Setup team 2
+        ArrayList<Player> team2 = GameStateManager.getInstance().getTeam2();
+        Player t2p1 = team2.get(0);
+        View t2p1View = findViewById(R.id.team2Player1);
+        t1p1View.setTag(t1p1.id);
+        ((TextView)t2p1View.findViewById(R.id.player_name)).setText(t2p1.name);
+
+        fillTeamViews();
+    }
+
+    /**
+     * Finds all views of players and stores them in two arrays, one for each team.
+     */
+    private void fillTeamViews() {
+        mTeam1Views.add(findViewById(R.id.team1Player1));
+        mTeam1Views.add(findViewById(R.id.team1Player2));
+        mTeam1Views.add(findViewById(R.id.team1Player3));
+        mTeam1Views.add(findViewById(R.id.team1Player4));
+
+        mTeam1Views.add(findViewById(R.id.team2Player1));
+        mTeam1Views.add(findViewById(R.id.team2Player2));
+        mTeam1Views.add(findViewById(R.id.team2Player3));
+        mTeam1Views.add(findViewById(R.id.team2Player4));
     }
 
     @Override
@@ -176,5 +217,21 @@ public class GameInProgressActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void setPlayerHealth(String playerId, int health) {
+        for(View v : mTeam1Views){
+            if(v.getTag().equals(playerId)){
+                if(health == 100){
+
+                }
+            };
+        }
+    }
+
+    @Override
+    public void setGameEnd(int winningTeam) {
+
     }
 }

@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.lightball.lightball.entities.Player;
 
@@ -112,10 +110,15 @@ public class TeamFragment extends Fragment {
         mListener = null;
     }
 
-    public int addPlayerToTeam(Player player){
+    public int addPlayerToTeam(Player player, int team){
         Log.d("Debug","Added player to team");
         mPlayers.add(player);
         mPlayerRecyclerViewAdapter.notifyDataSetChanged();
+        if(team == 1){
+            GameStateManager.getInstance().setTeam1(mPlayers);
+        }else if(team == 2){
+            GameStateManager.getInstance().setTeam2(mPlayers);
+        }
         return mPlayers.size();
     }
     /**
