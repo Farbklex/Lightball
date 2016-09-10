@@ -12,6 +12,9 @@
 #define NUM_PIXELS 20
 #define NUM_TEAM_PIXELS 2
 
+// Other pins
+#define PIN_TRIGGER 5
+
 // Bluetooth
 #define BLUEFRUIT_SPI_CS 8
 #define BLUEFRUIT_SPI_IRQ 7
@@ -59,6 +62,8 @@ void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
     
+    pinMode(PIN_TRIGGER, INPUT);
+    
     strip.begin();
     strip.show(); // Initialize all pixels to 'off'
 
@@ -89,7 +94,8 @@ void setup() {
     error(F("Could not set device name?"));
     }
 
-    setStripCol(255, 255, 255);
+    // setStripCol(255, 255, 255);
+    setStripCol(0, 0, 0);
 
   Serial.println(F("Performing a SW reset (service changes require a reset): "));
   if (! ble.reset() ) {
@@ -105,7 +111,8 @@ void setup() {
   ble.verbose(false);
   ble.echo(false);
   
-  setTeam(255,255,255);
+//   setTeam(255,255,255);
+setTeam(0, 0, 0);
   
   /* Wait for connection */
   while (! ble.isConnected()) {
@@ -156,18 +163,12 @@ void loop() {
   // Check for user input
   char inputs[BUFSIZE+1];
   
-  // put your main code here, to run repeatedly:
-  digitalWrite(LED_BUILTIN, LOW);
-
-//  rainbow(10);
-//  setHealth(100);
-//  delay(3000);
-//  setHealth(0);
-//  delay(3000);
-//  setHealth(25);
-//  delay(3000);
-//  setHealth(75);
-//  delay(3000);
+  // Hit trigger
+  if (digitalRead(PIN_TRIGGER) == HIGH) {
+    setHealth(50);
+    delay(1000);
+    setHealth(100);
+  }
 
   if ( getUserInput(inputs, BUFSIZE) )
   {
@@ -299,4 +300,4 @@ void setTeam(uint8_t r, uint8_t g, uint8_t b) {
     }
     strip.show();
     strip2.show();
-} 
+}
