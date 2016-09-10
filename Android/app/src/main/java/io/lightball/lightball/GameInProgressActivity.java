@@ -22,8 +22,8 @@ import io.lightball.lightball.interfaces.GameStateInterface;
 public class GameInProgressActivity extends AppCompatActivity
     implements GameStateInterface {
 
-    ArrayList<View> mTeam1Views;
-    ArrayList<View> mTeam2Views;
+    ArrayList<View> mTeam1Views = new ArrayList<>();
+    ArrayList<View> mTeam2Views = new ArrayList<>();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -125,17 +125,21 @@ public class GameInProgressActivity extends AppCompatActivity
 
         //Setup team 1
         ArrayList<Player> team1 = GameStateManager.getInstance().getTeam1();
-        Player t1p1 = team1.get(0);
-        View t1p1View = findViewById(R.id.team1Player1);
-        t1p1View.setTag(t1p1.id);
-        ((TextView)t1p1View.findViewById(R.id.player_name)).setText(t1p1.name);
+        if(team1 != null){
+            Player t1p1 = team1.get(0);
+            View t1p1View = findViewById(R.id.team1Player1);
+            t1p1View.setTag(t1p1.id);
+            ((TextView)t1p1View.findViewById(R.id.player_name)).setText(t1p1.name);
+        }
 
         //Setup team 2
         ArrayList<Player> team2 = GameStateManager.getInstance().getTeam2();
-        Player t2p1 = team2.get(0);
-        View t2p1View = findViewById(R.id.team2Player1);
-        t1p1View.setTag(t1p1.id);
-        ((TextView)t2p1View.findViewById(R.id.player_name)).setText(t2p1.name);
+        if(team2 != null){
+            Player t2p1 = team2.get(0);
+            View t2p1View = findViewById(R.id.team2Player1);
+            t2p1View.setTag(t2p1.id);
+            ((TextView)t2p1View.findViewById(R.id.player_name)).setText(t2p1.name);
+        }
 
         fillTeamViews();
     }
