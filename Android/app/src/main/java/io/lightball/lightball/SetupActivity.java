@@ -3,6 +3,7 @@ package io.lightball.lightball;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,18 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import io.lightball.lightball.ble.BleManager;
 import io.lightball.lightball.dialogs.AddPlayerDialog;
 import io.lightball.lightball.entities.Player;
 
-public class PlayfieldActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
-
-    private BleManager mBleManager;
+public class SetupActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playfield);
+        setContentView(R.layout.activity_setup);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,11 +29,9 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
             public void onClick(View view) {
                 AddPlayerDialog dialog = new AddPlayerDialog();
                 dialog.show(getSupportFragmentManager(),"ADD_PLAYER");
+
             }
         });
-
-        mBleManager = BleManager.getInstance(this);
-
     }
 
     @Override
@@ -74,9 +70,14 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
             teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam2));
         }
         if(teamFragment != null){
-            teamFragment.addPlayerToTeam(player);
-            Toast.makeText(PlayfieldActivity.this, "Player " + player.name + " added to team " + team, Toast.LENGTH_SHORT)
+            teamFragment.addPlayerToTeam(player, team);
+            Toast.makeText(SetupActivity.this, "Player " + player.name + " added to team " + team, Toast.LENGTH_SHORT)
                     .show();
         }
-    };
+    }
+
+    public void startGame(View v){
+        Intent intent = new Intent(this, GameInProgressActivity.class);
+        startActivity(intent);
+    }
 }

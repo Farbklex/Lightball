@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="io.lightball.lightball.PlayfieldActivity">
+    tools:context=".SetupActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -32,25 +32,69 @@
                     android:paddingTop="@dimen/activity_vertical_margin"
                     tools:context="io.lightball.lightball.PlayfieldActivityFragment"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:showIn="@layout/activity_playfield">
+                    tools:showIn="@layout/activity_setup">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="2">
-            <fragment android:id="@+id/playersTeam1"
-                      android:name="io.lightball.lightball.TeamFragment"
-                      android:layout_width="0dp"
-                      android:layout_height="match_parent"
-                      android:layout_weight="1"
-                      tools:layout="@layout/fragment_player_list"/>
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="4">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="@android:style/TextAppearance.Material.Headline"
+                    android:text="Team 1"/>
+
+                <fragment android:id="@+id/playersTeam1"
+                          android:name="io.lightball.lightball.TeamFragment"
+                          android:layout_width="0dp"
+                          android:layout_height="match_parent"
+                          tools:layout="@layout/fragment_player_list"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <Button
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:text="Start"
+                    android:onClick="startGame"
+                    />
+
+
+            </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="4">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                style="@android:style/TextAppearance.Material.Headline"
+                android:text="Team 2"/>
+
             <fragment android:id="@+id/playersTeam2"
                       android:name="io.lightball.lightball.TeamFragment"
                       android:layout_width="0dp"
                       android:layout_height="match_parent"
-                      android:layout_weight="1"
                       tools:layout="@layout/fragment_player_list"/>
+            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>
@@ -62,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add"/>
+        android:src="@drawable/ic_person_add_white_24dp"
+        android:transitionName="addPlayer"/>
 
 </android.support.design.widget.CoordinatorLayout>

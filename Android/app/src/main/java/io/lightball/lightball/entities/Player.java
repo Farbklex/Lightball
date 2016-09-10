@@ -1,5 +1,6 @@
 package io.lightball.lightball.entities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,19 +9,22 @@ import android.os.Parcelable;
  */
 public class Player implements Parcelable{
     public final String id;
+    public Drawable portrait = null;
     public final String name;
-    public final int health;
+    public int health;
 
-    public Player(String id, String content, int health) {
+    public Player(String id, Drawable portrait, String content, int health) {
         this.id = id;
         this.name = content;
         this.health = health;
+        this.portrait = portrait;
     }
 
     public Player(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
         this.health = Integer.valueOf(in.readString());
+        this.portrait = null;
     }
 
 
