@@ -2,4 +2,59 @@
     <string name="app_name">Lightball</string>
     <string name="action_settings">Settings</string>
     <string name="action_debug">Debug</string>
+
+    <!-- Scan Activity -->
+    <string name="scan_scanbutton_scan">Scan for peripherals</string>
+    <string name="scan_scanbutton_scanning">Scanning…</string>
+    <string name="scan_devicesheadertitle">PERIPHERALS</string>
+    <string name="scan_nodevicesfound">No peripherals found</string>
+    <string name="scan_device_localname">Local Name</string>
+    <string name="scan_device_address">Address</string>
+    <string name="scan_device_rssi_notavailable">N/A</string>
+    <string name="scan_device_connect">Connect</string>
+    <string name="scan_device_uuid">UUID</string>
+    <string name="scan_device_services">Service UUIDs</string>
+    <string name="scan_device_txpower">TX Power Level</string>
+    <string name="scan_device_beacon_manufacturer">Manufacturer</string>
+    <string name="scan_device_beacon_major">Major</string>
+    <string name="scan_device_beacon_minor">Minor</string>
+    <string name="scan_device_uribeacon_uri">Uri</string>
+    <string name="scan_connecting">Connecting…</string>
+    <string name="scan_gettingupdateinfo">Waiting for device info…</string>
+    <string name="scan_connectto_dialog_title_format">Choose mode to connect to %s</string>
+    <string name="scan_unexpecteddisconnect">Peripheral disconnected</string>
+    <string name="scan_tag_id">Id</string>
+    <string name="scan_connectservice_info">Info</string>
+    <string name="scan_connectservice_uart">UART</string>
+    <string name="scan_connectservice_pinio">Pin I/O</string>
+    <string name="scan_connectservice_controller">Controller</string>
+    <string name="scan_connectservice_beacon">Beacon</string>
+    <string name="scan_connectservice_neopixel">Neopixel</string>
+    <string name="scan_softwareupdate_title">Update available</string>
+    <string name="scan_softwareupdate_messageformat">Software version %s is available</string>
+    <string name="scan_bootloaderandfirmwareupdate_messageformat">Software version %1$s and Bootloader version %2$s are available. This is a two-step process: bootloader will be updated first and firmware the next time you connect to the device</string>
+
+    <string name="scan_softwareupdate_install">Install</string>
+    <string name="scan_softwareupdate_notnow">Ask later</string>
+    <string name="scan_softwareupdate_dontask">Ignore</string>
+    <string name="scan_softwareupdate_downloaderror">Software download error</string>
+    <string name="scan_softwareupdate_updateerror">Software update error</string>
+    <string name="scan_softwareupdate_completed">Software updated successfully</string>
+
+
+    <string name="scan_failedupdatedetected_title">Failed update detected</string>
+    <string name="scan_failedupdatedetected_message">A failed update for this device has been detected.\nIt is strongly recommended to retry updating the device now</string>
+    <string name="scan_failedupdatedetected_ok">Update now</string>
+
+
+    <string name="scan_secondphaseupdatedetected_title">Continue update</string>
+    <string name="scan_secondphaseupdatedetected_message">Firmware will be updated now</string>
+    <string name="scan_secondphaseupdatedetected_ok">Continue</string>
+
+    <string-array name="scan_devicetypes">
+        <item>Uknown</item>
+        <item>UART capable</item>
+        <item>Beacon</item>
+        <item>Eddystone</item>
+    </string-array>
 </resources>

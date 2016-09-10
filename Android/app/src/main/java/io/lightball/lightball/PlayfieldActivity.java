@@ -10,10 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import io.lightball.lightball.ble.BleManager;
 import io.lightball.lightball.dialogs.AddPlayerDialog;
 import io.lightball.lightball.entities.Player;
 
 public class PlayfieldActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
+
+    private BleManager mBleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,9 @@ public class PlayfieldActivity extends AppCompatActivity implements TeamFragment
                 dialog.show(getSupportFragmentManager(),"ADD_PLAYER");
             }
         });
+
+        mBleManager = BleManager.getInstance(this);
+
     }
 
     @Override
