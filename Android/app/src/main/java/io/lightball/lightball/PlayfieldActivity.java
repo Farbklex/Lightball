@@ -1,15 +1,22 @@
 package io.lightball.lightball;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-public class PlayfieldActivity extends AppCompatActivity {
+import io.lightball.lightball.ble.BleManager;
+import io.lightball.lightball.dialogs.AddPlayerDialog;
+import io.lightball.lightball.entities.Player;
+
+public class PlayfieldActivity extends AppCompatActivity implements TeamFragment.OnListFragmentInteractionListener {
+
+    private BleManager mBleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +29,18 @@ public class PlayfieldActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AddPlayerDialog dialog = new AddPlayerDialog();
+                dialog.show(getSupportFragmentManager(),"ADD_PLAYER");
             }
         });
+
+        mBleManager = BleManager.getInstance(this);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the actsion bar if it is present.
         getMenuInflater().inflate(R.menu.menu_playfield, menu);
         return true;
     }
@@ -43,10 +53,30 @@ public class PlayfieldActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_debug) {
+            Intent intent = new Intent(this, DebugActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onListFragmentInteraction(Player item) {
+
+    }
+
+    public void addPlayerToTeam(Player player, int team){
+        TeamFragment teamFragment = null;
+        if(team == 1){
+            teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam1));
+        }else if(team == 2){
+            teamFragment = ((TeamFragment) getSupportFragmentManager().findFragmentById(R.id.playersTeam2));
+        }
+        if(teamFragment != null){
+            teamFragment.addPlayerToTeam(player);
+            Toast.makeText(PlayfieldActivity.this, "Player " + player.name + " added to team " + team, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    };
 }
