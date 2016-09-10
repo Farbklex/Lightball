@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+              android:orientation="vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingTop="8dp"
+              android:transitionName="addPlayer">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <EditText
             android:id="@+id/edit_player_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="Player name"/>
     </android.support.design.widget.TextInputLayout>
 
-        <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_team1"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="Team 1"/>
-            <RadioButton android:id="@+id/radio_team2"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="Team 2"/>
-        </RadioGroup>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_team1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Team 1"
+            />
+
+        <RadioButton
+            android:id="@+id/radio_team2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Team 2"/>
+    </RadioGroup>
 
 </LinearLayout>

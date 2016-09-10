@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,15 +29,17 @@ public class PlayerRecyclerViewAdapter extends RecyclerView.Adapter<PlayerRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_player, parent, false);
+                .inflate(R.layout.fragment_player_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).name);
+        holder.mName.setText(mValues.get(position).name);
+        if(holder.mHealth != null){
+            holder.mHealth.setProgress(mValues.get(position).health);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,20 +60,24 @@ public class PlayerRecyclerViewAdapter extends RecyclerView.Adapter<PlayerRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mName;
+        public final ProgressBar mHealth;
         public Player mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.player_name);
-            mContentView = (TextView) view.findViewById(R.id.playerHealth);
+            mName = (TextView) view.findViewById(R.id.player_name);
+            if(view.findViewById(R.id.playerHealth) != null){
+                mHealth = (ProgressBar) view.findViewById(R.id.playerHealth);
+            }else {
+                mHealth = null;
+            }
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mHealth.getProgress() + "'";
         }
     }
 

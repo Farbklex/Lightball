@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView
-    android:id="@+id/list"
-    android:name="io.lightball.lightball.TeamFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:name="io.lightball.lightball.TeamFragment"
+    android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="io.lightball.lightball.TeamFragment"
-    tools:listitem="@layout/fragment_player"/>
+    tools:listitem="@layout/fragment_player_list_item"/>
