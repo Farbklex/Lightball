@@ -27,6 +27,7 @@ import java.util.Arrays;
 import io.lightball.lightball.ble.BleManager;
 import io.lightball.lightball.entities.Player;
 import io.lightball.lightball.interfaces.GameStateInterface;
+import io.lightball.lightball.utils.BluetoothManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -48,6 +49,7 @@ public class GameInProgressActivity extends AppCompatActivity
     public static final int kTxMaxCharacters = 20;
 
     protected BluetoothGattService mUartService;
+    protected BleManager mBleManager;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -175,16 +177,12 @@ public class GameInProgressActivity extends AppCompatActivity
         Chronometer chronometer = (Chronometer) findViewById(R.id.time);
         chronometer.start();
 
-        /*
-        boolean isConnecting = BleManager.getInstance(this).connect(this, GameStateManager.getInstance().getTeam1().get(0).id);
-
         BluetoothManager btMgr = BluetoothManager.getInstance();
         btMgr.setBleListener(this);
-        try {
-            Thread.sleep(3000);
-        } catch (Exception e) {}
-        byte data[] = {0x01, 0x4b};
-        sendData(data);*/
+
+        mBleManager = BleManager.getInstance(this);
+        mBleManager.setBleListener(this);
+        boolean isConnecting = mBleManager.connect(this, GameStateManager.getInstance().getTeam1().get(0).id);
     }
 
     private void initPlayerView(final Player player, View view) {
@@ -287,7 +285,8 @@ public class GameInProgressActivity extends AppCompatActivity
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
 
-        Chronometer c = findViewById(R.id)
+        Chronometer c = (Chronometer) findViewById(R.id.time);
+        c.stop();
     }
 
     /**
@@ -414,12 +413,12 @@ public class GameInProgressActivity extends AppCompatActivity
 
     @Override
     public void onDataAvailable(BluetoothGattCharacteristic characteristic) {
-
+        Log.d(TAG, "");
     }
 
     @Override
     public void onDataAvailable(BluetoothGattDescriptor descriptor) {
-
+        Log.d(TAG, "");
     }
 
     @Override
