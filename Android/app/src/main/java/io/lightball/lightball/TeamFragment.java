@@ -113,6 +113,7 @@ public class TeamFragment extends Fragment {
     public int addPlayerToTeam(Player player, int team){
         Log.d("Debug","Added player to team");
         mPlayers.add(player);
+
         mPlayerRecyclerViewAdapter.notifyDataSetChanged();
         if(team == 1){
             GameStateManager.getInstance().setTeam1(mPlayers);

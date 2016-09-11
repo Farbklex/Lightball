@@ -111,4 +111,23 @@ public class GameStateManager{
     public void setCallback(){
 
     }
+
+    /**
+     * Calculates the current total lifepoints per team
+     * @return int array with scores for team 1 [0] and team 2 [1]
+     */
+    public int[] getScores() {
+        int[] scores = {0,0};
+        int score1 = 0;
+        int score2 = 0;
+        for(Player p : mTeam1){
+            score1 += p.health;
+        }
+        scores[0] = score1;
+        for(Player p : mTeam2){
+            score2 += p.health;
+        }
+        scores[1] = score2;
+        return scores;
+    }
 }

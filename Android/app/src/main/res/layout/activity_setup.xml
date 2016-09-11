@@ -30,7 +30,7 @@
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_vertical_margin"
-                    tools:context="io.lightball.lightball.PlayfieldActivityFragment"
+                    tools:context="io.lightball.lightball.SetupActivity"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:showIn="@layout/activity_setup">
 
@@ -54,7 +54,7 @@
 
                 <fragment android:id="@+id/playersTeam1"
                           android:name="io.lightball.lightball.TeamFragment"
-                          android:layout_width="0dp"
+                          android:layout_width="match_parent"
                           android:layout_height="match_parent"
                           tools:layout="@layout/fragment_player_list"/>
             </LinearLayout>
@@ -91,7 +91,7 @@
 
             <fragment android:id="@+id/playersTeam2"
                       android:name="io.lightball.lightball.TeamFragment"
-                      android:layout_width="0dp"
+                      android:layout_width="match_parent"
                       android:layout_height="match_parent"
                       tools:layout="@layout/fragment_player_list"/>
             </LinearLayout>
