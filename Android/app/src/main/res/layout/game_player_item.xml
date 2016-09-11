@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/playerHealth"
-        android:layout_width="@dimen/player_portrait_size"
-        android:layout_height="@dimen/player_portrait_size"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_centerVertical="true"
         android:layout_alignParentBottom="true"
         android:adjustViewBounds="true"
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
-        android:text="Player name"
+        android:text="-"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textAppearance="?attr/textAppearanceListItem"

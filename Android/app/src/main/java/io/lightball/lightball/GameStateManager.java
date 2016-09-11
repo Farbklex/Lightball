@@ -1,8 +1,11 @@
 package io.lightball.lightball;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import io.lightball.lightball.entities.Player;
+import io.lightball.lightball.interfaces.GameStateInterface;
 
 /**
  * Created by Alexander Hoffmann on 10.09.16.
@@ -10,6 +13,8 @@ import io.lightball.lightball.entities.Player;
 public class GameStateManager{
     private ArrayList<Player> mTeam1;
     private ArrayList<Player> mTeam2;
+
+    private GameStateInterface mCallback;
 
     boolean mGameEnded = false;
     int mWinningTeam = 0;
@@ -24,19 +29,32 @@ public class GameStateManager{
     }
 
     public void reduceHealth(String playerId){
+        Log.d("Debug","Reduce health in GameStateManager triggered");
+        int newHealth = 0;
         for(Player p : mTeam1){
-            if(p.id.equals(playerId)) p.health = p.health - 25;
+            if(p.id != null && p.id.equals(playerId)){
+                p.health = p.health - 25;
+                newHealth = p.health;
+            }
         }
 
         for(Player p : mTeam2){
-            if(p.id.equals(playerId)) p.health = p.health - 25;
+            if(p.id != null && p.id.equals(playerId)){
+                p.health = p.health - 25;
+                newHealth = p.health;
+            }
         }
+
+        //Update the UI
+        Log.d("Debug","Calling setPlayerHealth in UI with " + newHealth + "HP.");
+        mCallback.setPlayerHealth(playerId, newHealth);
+
         checkIfGameEnds();
         sendHealthToShirt();
     }
 
     private void sendHealthToShirt() {
-
+        //TODO: Bluetooth Code
     }
 
     /**
@@ -62,15 +80,14 @@ public class GameStateManager{
 
             if(alivePlayersTeam1 == 0){
                 mWinningTeam = 1;
-                return 1;
             }
 
             if(alivePlayersTeam2 == 0){
                 mWinningTeam = 2;
-                return 2;
             }
         }
-        return 0;
+        {mCallback.setGameEnd(mWinningTeam);}
+        return mWinningTeam;
     }
 
     public ArrayList<Player> getTeam1() {
@@ -113,8 +130,8 @@ public class GameStateManager{
         mWinningTeam = 0;
     }
 
-    public void setCallback(){
-
+    public void setCallback(GameStateInterface callback){
+        mCallback = callback;
     }
 
     /**

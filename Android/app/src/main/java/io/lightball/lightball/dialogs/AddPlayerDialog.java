@@ -58,7 +58,12 @@ public class AddPlayerDialog extends android.support.v4.app.DialogFragment {
                         String deviceName = (String) spinner.getAdapter().getItem(spinner.getSelectedItemPosition());
                         String deviceAddress = ((SetupActivity) getActivity()).getDeviceAddressByName(deviceName);
 
-                        ((SetupActivity) getActivity()).addPlayerToTeam(new Player(deviceAddress, null, playerName,100),team);
+                        if(playerName.equals("kk")){
+                            ((SetupActivity) getActivity()).addPlayerToTeam(new Player("345", null, playerName,100),team);
+                        }else {
+                            ((SetupActivity) getActivity()).addPlayerToTeam(new Player(deviceAddress, null, playerName,100),team);
+                        }
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

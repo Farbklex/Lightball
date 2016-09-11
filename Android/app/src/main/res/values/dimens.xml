@@ -8,6 +8,9 @@
 
     <dimen name="large_header">50sp</dimen>
 
+    <dimen name="player_margin_big">40dp</dimen>
+
+
     <dimen name="player_portrait_size">128dp</dimen>
     <dimen name="player_portrait_size_75">96dp</dimen>
     <dimen name="player_portrait_size_50">64dp</dimen>
