@@ -11,7 +11,7 @@ double threshold = 0;
 void setup() {
     Serial.begin(9600);
     
-    pinMode(PIN_COPPER_SENSOR, INPUT);
+    // pinMode(PIN_COPPER_SENSOR, INPUT);
     pinMode(PIN_OUTPUT, OUTPUT);
     digitalWrite(PIN_OUTPUT, LOW);
     
@@ -52,14 +52,14 @@ void calibrate() {
 }
 
 void loop() {
-    // int analogSig = analogRead(PIN_ANAGLOG_IN);
-    // if (analogSig < threshold) {
-    //     sendHit();
-    // }
-    
-    if (digitalRead(PIN_COPPER_SENSOR) == HIGH) {
+    int analogSig = analogRead(PIN_ANAGLOG_IN);
+    if (analogSig < threshold) {
         sendHit();
     }
+    
+    // if (digitalRead(PIN_COPPER_SENSOR) == HIGH) {
+    //     sendHit();
+    // }
 }
 
 void sendHit() {

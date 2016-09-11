@@ -22,6 +22,8 @@
 #define FACTORYRESET_ENABLE 1
 // #define MODE_LED_BEHAVIOUR "BLUEART"
 
+int health = 100;
+
 // Config
 // #define BT_NAME "Lightball Gear Alpha"
 
@@ -165,9 +167,12 @@ void loop() {
   
   // Hit trigger
   if (digitalRead(PIN_TRIGGER) == HIGH) {
-    setHealth(50);
+    health = health - 25;
+    if (health < 0) {
+        health = 100;
+    }
+    setHealth(health);
     delay(1000);
-    setHealth(100);
   }
 
   if ( getUserInput(inputs, BUFSIZE) )
@@ -208,6 +213,7 @@ bool parseBtCommand() {
         // Set health
         Serial.println("[recv 1]");
         uint8_t val = ble.buffer[1];
+        health = val;
         setHealth(val);
     } else if (code == '2') {
         // Set team
@@ -291,6 +297,54 @@ void setHealth(uint16_t health) {
   }
   strip.show();
   strip2.show();
+  
+  if (health == 0) {
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 0, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    delay(200);
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 255, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    delay(200);
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 0, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    delay(200);
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 255, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 0, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    delay(200);
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 255, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 0, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+    delay(200);
+    for (j = 0; j < NUM_PIXELS; j++) {
+        setCol(j, 255, 0, 0);
+    }
+    strip.show();
+    strip2.show();
+  }
 }
 
 void setTeam(uint8_t r, uint8_t g, uint8_t b) {
