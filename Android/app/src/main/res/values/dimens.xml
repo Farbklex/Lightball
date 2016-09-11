@@ -6,5 +6,10 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
 
-    <dimen name="player_portrait_size">64dp</dimen>
+    <dimen name="large_header">50sp</dimen>
+
+    <dimen name="player_portrait_size">128dp</dimen>
+    <dimen name="player_portrait_size_75">96dp</dimen>
+    <dimen name="player_portrait_size_50">64dp</dimen>
+    <dimen name="player_portrait_size_25">32dp</dimen>
 </resources>

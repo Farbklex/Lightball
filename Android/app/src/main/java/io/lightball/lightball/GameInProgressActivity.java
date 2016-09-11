@@ -5,11 +5,21 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Chronometer;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.net.HttpRetryException;
 import java.util.ArrayList;
 
 import io.lightball.lightball.entities.Player;
@@ -128,9 +138,19 @@ public class GameInProgressActivity extends AppCompatActivity
         if(team1 != null){
             Player t1p1 = team1.get(0);
             View t1p1View = findViewById(R.id.team1Player1);
-            t1p1View.setTag(t1p1.id);
+            t1p1View.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setPlayerHealth("345", 75);
+                }
+            });
+
+            //TODO
+            //t1p1View.setTag(t1p1.id);
+            t1p1View.setTag("345");
             ((TextView)t1p1View.findViewById(R.id.player_name)).setText(t1p1.name);
         }
+
 
         //Setup team 2
         ArrayList<Player> team2 = GameStateManager.getInstance().getTeam2();
@@ -142,6 +162,23 @@ public class GameInProgressActivity extends AppCompatActivity
         }
 
         fillTeamViews();
+
+        Chronometer chronometer = (Chronometer) findViewById(R.id.time);
+        chronometer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Chronometer chronometer = (Chronometer) findViewById(R.id.time);
+        chronometer.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Chronometer chronometer = (Chronometer) findViewById(R.id.time);
+        chronometer.start();
     }
 
     /**
@@ -225,13 +262,46 @@ public class GameInProgressActivity extends AppCompatActivity
 
     @Override
     public void setPlayerHealth(String playerId, int health) {
-        for(View v : mTeam1Views){
-            if(v.getTag().equals(playerId)){
-                if(health == 100){
+        int threeQuartersSizePixel = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_75)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
+        int halfSizePixel = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_50)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
+        int quarterSizePixel=Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_25)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
 
+        int fullSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size)));
+        int threeQuartersSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_75)));
+        int halfSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_50)));
+        int quarterSize=Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_25)));
+        for(View v : mTeam1Views){
+            if(v.getTag() != null && v.getTag().equals(playerId)){
+                ImageView playerHealth = (ImageView) v.findViewById(R.id.playerHealth);
+                View playerPortrait = v.findViewById(R.id.player_portrait);
+                if(health == 100){
+                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize,fullSize));
+                    playerHealth.setY(playerPortrait.getY());
+                    Log.d("Debug","Set health to 100");
+                }else if(50 < health && health <= 75){
+                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, threeQuartersSize));
+                    playerHealth.setY(playerPortrait.getY() + quarterSizePixel);
+                    Log.d("Debug","Set health to 75");
+                }else if(25 < health && health <= 50){
+                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, halfSize));
+                    playerHealth.setY(playerPortrait.getY() + halfSizePixel);
+                    Log.d("Debug","Set health to 50");
+                }else if(0< health && health <= 25){
+                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, quarterSize));
+                    playerHealth.setY(playerPortrait.getY() + threeQuartersSizePixel);
+                    Log.d("Debug","Set health to 25");
+                }else{
+                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, 0));
+                    Log.d("Debug","Set health to 0");
                 }
-            };
+            }
         }
+        updateScore();
+    }
+
+    private void updateScore() {
+        int[] scores = GameStateManager.getInstance().getScores();
+
     }
 
     @Override
