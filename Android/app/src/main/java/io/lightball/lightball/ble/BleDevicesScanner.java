@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class BleDevicesScanner {
     private static final String TAG = BleDevicesScanner.class.getSimpleName();
-    private static final long kScanPeriod = 20 * 1000; // scan period in milliseconds
+    private static final long kScanPeriod = 2 * 1000; // scan period in milliseconds
 
     // Data
     private final BluetoothAdapter mBluetoothAdapter;
@@ -26,6 +26,8 @@ public class BleDevicesScanner {
     private List<UUID> mServicesToDiscover;
     private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
     private final LeScansPoster mLeScansPoster;
+
+
 
     //
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
