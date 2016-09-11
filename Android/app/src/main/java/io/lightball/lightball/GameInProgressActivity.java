@@ -1,6 +1,9 @@
 package io.lightball.lightball;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,21 +22,36 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.net.HttpRetryException;
-import java.util.ArrayList;
 
+import java.net.HttpRetryException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import io.lightball.lightball.ble.BleManager;
 import io.lightball.lightball.entities.Player;
 import io.lightball.lightball.interfaces.GameStateInterface;
+import io.lightball.lightball.utils.BluetoothManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class GameInProgressActivity extends AppCompatActivity
-    implements GameStateInterface {
+    implements GameStateInterface, BleManager.BleManagerListener {
 
     ArrayList<View> mTeam1Views = new ArrayList<>();
     ArrayList<View> mTeam2Views = new ArrayList<>();
+
+    // Bluetooth stuff
+    public static final String TAG = "GameInProgressActivity";
+    public static final String UUID_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String UUID_RX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String UUID_TX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    public static final String UUID_DFU = "00001530-1212-EFDE-1523-785FEABCD123";
+    public static final int kTxMaxCharacters = 20;
+
+    protected BluetoothGattService mUartService;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -165,6 +183,16 @@ public class GameInProgressActivity extends AppCompatActivity
 
         Chronometer chronometer = (Chronometer) findViewById(R.id.time);
         chronometer.start();
+
+        boolean isConnecting = BleManager.getInstance(this).connect(this, GameStateManager.getInstance().getTeam1().get(0).id);
+
+        BluetoothManager btMgr = BluetoothManager.getInstance();
+        btMgr.setBleListener(this);
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {}
+        byte data[] = {0x01, 0x4b};
+        sendData(data);
     }
 
     @Override
@@ -307,5 +335,66 @@ public class GameInProgressActivity extends AppCompatActivity
     @Override
     public void setGameEnd(int winningTeam) {
 
+    }
+
+    // Utility
+
+    // region Send Data to UART
+    protected void sendData(String text) {
+        final byte[] value = text.getBytes(Charset.forName("UTF-8"));
+        sendData(value);
+    }
+
+    protected void sendData(byte[] data) {
+        mUartService = BleManager.getInstance(this).getGattService(UUID_SERVICE);
+        if (mUartService != null) {
+            // Split the value into chunks (UART service has a maximum number of characters that can be written )
+            for (int i = 0; i < data.length; i += kTxMaxCharacters) {
+                final byte[] chunk = Arrays.copyOfRange(data, i, Math.min(i + kTxMaxCharacters, data.length));
+                BleManager.getInstance(getApplicationContext()).writeService(mUartService, UUID_TX, chunk);
+            }
+        } else {
+            Log.w(TAG, "Uart Service not discovered. Unable to send data");
+        }
+    }
+
+    // Callbacks
+    @Override
+    public void onConnected() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onServicesDiscovered() {
+        mUartService = BleManager.getInstance(this).getGattService(UUID_SERVICE);
+    }
+
+    @Override
+    public void onDataAvailable(BluetoothGattCharacteristic characteristic) {
+
+    }
+
+    @Override
+    public void onDataAvailable(BluetoothGattDescriptor descriptor) {
+
+    }
+
+    @Override
+    public void onReadRemoteRssi(int rssi) {
+
+    }
+
+    protected void enableRxNotifications() {
+        BleManager.getInstance(this).enableNotification(mUartService, UUID_RX, true);
     }
 }

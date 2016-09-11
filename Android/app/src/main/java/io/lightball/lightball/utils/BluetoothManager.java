@@ -31,6 +31,7 @@ public class BluetoothManager implements BleManager.BleManagerListener {
     private BleDevicesScanner mScanner;
     private long mScanCount;
     private ArrayList<BluetoothDeviceData> mScannedDevices;
+    private BleManager.BleManagerListener mBleListener;
 
     public interface OnScanCompleteListener {
         public void onScanComplete(ArrayList<BluetoothDeviceData> res);
@@ -49,6 +50,10 @@ public class BluetoothManager implements BleManager.BleManagerListener {
     public void init(Context context) {
         appContext = context;
         mBleManager = BleManager.getInstance(appContext);
+    }
+
+    public void setBleListener(BleManager.BleManagerListener listener) {
+        mBleListener = listener;
     }
 
     public void scan(final OnScanCompleteListener listener) {
@@ -289,36 +294,36 @@ public class BluetoothManager implements BleManager.BleManagerListener {
     // Callbacks
     @Override
     public void onConnected() {
-
+        mBleListener.onConnected();
     }
 
     @Override
     public void onConnecting() {
-
+        mBleListener.onConnecting();
     }
 
     @Override
     public void onDisconnected() {
-
+        mBleListener.onDisconnected();
     }
 
     @Override
     public void onServicesDiscovered() {
-
+        mBleListener.onServicesDiscovered();
     }
 
     @Override
     public void onDataAvailable(BluetoothGattCharacteristic characteristic) {
-
+        mBleListener.onDataAvailable(characteristic);
     }
 
     @Override
     public void onDataAvailable(BluetoothGattDescriptor descriptor) {
-
+        mBleListener.onDataAvailable(descriptor);
     }
 
     @Override
     public void onReadRemoteRssi(int rssi) {
-
+        mBleListener.onReadRemoteRssi(rssi);
     }
 }
