@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
@@ -145,7 +145,7 @@ public class GameInProgressActivity extends AppCompatActivity
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.resumeButton).setOnTouchListener(mDelayHideTouchListener);
         fillTeamViews();
         //Setup team 1
         ArrayList<Player> team1 = GameStateManager.getInstance().getTeam1();
@@ -174,11 +174,6 @@ public class GameInProgressActivity extends AppCompatActivity
 
         Chronometer chronometer = (Chronometer) findViewById(R.id.time);
         chronometer.start();
-
-        TextView scoreTextView = (TextView) findViewById(R.id.scoreTextView);
-        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/pressstart2p.ttf");
-        scoreTextView.setTypeface(typeFace);
-        chronometer.setTypeface(typeFace);
 
         /*
         boolean isConnecting = BleManager.getInstance(this).connect(this, GameStateManager.getInstance().getTeam1().get(0).id);
@@ -274,6 +269,7 @@ public class GameInProgressActivity extends AppCompatActivity
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
+        findViewById(R.id.overlay).setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -284,13 +280,14 @@ public class GameInProgressActivity extends AppCompatActivity
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        findViewById(R.id.overlay).setVisibility(View.VISIBLE);
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+
+        Chronometer c = findViewById(R.id)
     }
 
     /**
@@ -364,6 +361,15 @@ public class GameInProgressActivity extends AppCompatActivity
         viewLooser.setBackgroundColor(getResources().getColor(R.color.red_overlay));
     }
 
+    @Override
+    public void resetGameState() {
+        findViewById(R.id.team1).setBackgroundColor(Color.TRANSPARENT);
+        findViewById(R.id.team2).setBackgroundColor(Color.TRANSPARENT);
+
+        Chronometer chronometer = (Chronometer) findViewById(R.id.time);
+        chronometer.start();
+    }
+
     // Utility
 
     // region Send Data to UART
@@ -423,5 +429,13 @@ public class GameInProgressActivity extends AppCompatActivity
 
     protected void enableRxNotifications() {
         BleManager.getInstance(this).enableNotification(mUartService, UUID_RX, true);
+    }
+
+    public void resetMatch(View v){
+        GameStateManager.getInstance().resetGame();
+    }
+
+    public void resume(View v){
+        hide();
     }
 }

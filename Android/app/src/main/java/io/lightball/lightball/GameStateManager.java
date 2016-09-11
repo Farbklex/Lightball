@@ -119,15 +119,27 @@ public class GameStateManager{
      */
     public void resetGame(){
         for(Player p : mTeam1){
-            p.health = 100;
+            setHealth(p, 100);
         }
 
         for(Player p : mTeam2){
-            p.health = 100;
+            setHealth(p, 100);
         }
 
+        mCallback.resetGameState();
         mGameEnded = false;
         mWinningTeam = 0;
+    }
+
+    /**
+     * Sets a players health to specific value in the GameStateManager, UI and shirt
+     * @param player
+     * @param health
+     */
+    private void setHealth(Player player, int health) {
+        player.health = 100;
+        mCallback.setPlayerHealth(player.id, health);
+        sendHealthToShirt();
     }
 
     public void setCallback(GameStateInterface callback){
