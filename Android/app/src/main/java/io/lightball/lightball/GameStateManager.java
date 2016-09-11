@@ -32,6 +32,11 @@ public class GameStateManager{
             if(p.id.equals(playerId)) p.health = p.health - 25;
         }
         checkIfGameEnds();
+        sendHealthToShirt();
+    }
+
+    private void sendHealthToShirt() {
+
     }
 
     /**
@@ -120,14 +125,17 @@ public class GameStateManager{
         int[] scores = {0,0};
         int score1 = 0;
         int score2 = 0;
-        for(Player p : mTeam1){
-            score1 += p.health;
+        if(mTeam1 != null && mTeam2 != null){
+            for(Player p : mTeam1){
+                score1 += p.health;
+            }
+            scores[0] = score1;
+            for(Player p : mTeam2){
+                score2 += p.health;
+            }
+            scores[1] = score2;
         }
-        scores[0] = score1;
-        for(Player p : mTeam2){
-            score2 += p.health;
-        }
-        scores[1] = score2;
         return scores;
+
     }
 }

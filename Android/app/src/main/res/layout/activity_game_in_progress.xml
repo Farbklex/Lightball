@@ -15,7 +15,9 @@
         android:countDown="false"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:textSize="@dimen/large_header"/>
+        android:layout_marginTop="12dp"
+        android:textSize="@dimen/large_header"
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/scoreTextView"
@@ -26,8 +28,7 @@
         android:text="Score: X - Y"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/large_header"
-        tools:ignore="MissingPrefix"
-        fontPath = "fonts/Pixeled.ttf"
+        android:textColor="@android:color/white"
         />
 
     <LinearLayout
@@ -49,29 +50,31 @@
             <include layout="@layout/game_player_item"
                 android:id="@+id/team1Player1"
                      android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                     android:layout_height="@dimen/player_portrait_size"
+                android:layout_marginLeft="4dp"
+                     android:layout_marginBottom="16dp"
                 />
 
             <include layout="@layout/game_player_item"
                  android:id="@+id/team1Player2"
                      android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_margin="8dp"
+                     android:layout_height="@dimen/player_portrait_size"
+                     android:layout_marginLeft="16dp"
+                     android:layout_marginBottom="16dp"
                 android:layout_toRightOf="@+id/team1Player1"/>
 
             <include layout="@layout/game_player_item"
                      android:id="@+id/team1Player3"
                      android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_margin="8dp"
+                     android:layout_height="@dimen/player_portrait_size"
+                     android:layout_marginLeft="4dp"
                 android:layout_below="@+id/team1Player1"/>
 
             <include layout="@layout/game_player_item"
                      android:id="@+id/team1Player4"
                      android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_margin="8dp"
+                     android:layout_height="@dimen/player_portrait_size"
+                     android:layout_marginLeft="16dp"
                      android:layout_toRightOf="@+id/team1Player3"
                      android:layout_below="@+id/team1Player2"/>
         </RelativeLayout>
