@@ -79,11 +79,11 @@ public class GameStateManager{
             mGameEnded = true;
 
             if(alivePlayersTeam1 == 0){
-                mWinningTeam = 1;
+                mWinningTeam = 2;
             }
 
             if(alivePlayersTeam2 == 0){
-                mWinningTeam = 2;
+                mWinningTeam = 1;
             }
         }
         {mCallback.setGameEnd(mWinningTeam);}

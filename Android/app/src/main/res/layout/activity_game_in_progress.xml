@@ -84,14 +84,14 @@
 
             <include
                 android:id="@+id/team2Player1"
-                layout="@layout/game_player_item"
+                layout="@layout/game_player_item_right"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/player_portrait_size"
                 android:layout_marginRight="@dimen/player_margin_big"                />
 
             <include
                 android:id="@+id/team2Player2"
-                layout="@layout/game_player_item"
+                layout="@layout/game_player_item_right"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -99,7 +99,7 @@
 
             <include
                 android:id="@+id/team2Player3"
-                layout="@layout/game_player_item"
+                layout="@layout/game_player_item_right"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/player_portrait_size"
                 android:layout_marginRight="@dimen/player_margin_big"/>
