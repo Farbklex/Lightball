@@ -144,7 +144,8 @@ public class BleManager implements BleGattExecutor.BleExecutorListener {
             mBleListener.onConnecting();
         }
 
-        final boolean gattAutoconnect = sharedPreferences.getBoolean("pref_gattautoconnect", false);
+//        final boolean gattAutoconnect = sharedPreferences.getBoolean("pref_gattautoconnect", false);
+        final boolean gattAutoconnect = true;
         mGatt = mDevice.connectGatt(mContext, gattAutoconnect, mExecutor);
 
         return true;
