@@ -4,26 +4,22 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Chronometer;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-import java.net.HttpRetryException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,17 +27,17 @@ import java.util.Arrays;
 import io.lightball.lightball.ble.BleManager;
 import io.lightball.lightball.entities.Player;
 import io.lightball.lightball.interfaces.GameStateInterface;
-import io.lightball.lightball.utils.BluetoothManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class GameInProgressActivity extends AppCompatActivity
-    implements GameStateInterface, BleManager.BleManagerListener {
+        implements GameStateInterface, BleManager.BleManagerListener {
 
     ArrayList<View> mTeam1Views = new ArrayList<>();
     ArrayList<View> mTeam2Views = new ArrayList<>();
+    ArrayList<View> mPlayers = new ArrayList<>();
 
     // Bluetooth stuff
     public static final String TAG = "GameInProgressActivity";
@@ -149,41 +145,37 @@ public class GameInProgressActivity extends AppCompatActivity
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
+        findViewById(R.id.resumeButton).setOnTouchListener(mDelayHideTouchListener);
+        fillTeamViews();
         //Setup team 1
         ArrayList<Player> team1 = GameStateManager.getInstance().getTeam1();
-        if(team1 != null){
-            Player t1p1 = team1.get(0);
-            View t1p1View = findViewById(R.id.team1Player1);
-            t1p1View.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setPlayerHealth("345", 75);
-                }
-            });
-
-            //TODO
-            //t1p1View.setTag(t1p1.id);
-            t1p1View.setTag("345");
-            ((TextView)t1p1View.findViewById(R.id.player_name)).setText(t1p1.name);
-        }
-
-
-        //Setup team 2
         ArrayList<Player> team2 = GameStateManager.getInstance().getTeam2();
-        if(team2 != null){
-            Player t2p1 = team2.get(0);
-            View t2p1View = findViewById(R.id.team2Player1);
-            t2p1View.setTag(t2p1.id);
-            ((TextView)t2p1View.findViewById(R.id.player_name)).setText(t2p1.name);
+
+        //Setup the player views
+        if (team1 != null) {
+            int i = 0;
+            for(Player player : team1){
+                initPlayerView(player,mTeam1Views.get(i));
+                i++;
+            }
+        }
+        //Also for team 2
+        if (team2 != null) {
+            int i = 0;
+            for(Player player : team2){
+                initPlayerView(player,mTeam2Views.get(i));
+                i++;
+            }
         }
 
-        fillTeamViews();
+        GameStateManager.getInstance().setCallback(this);
+
+        updateScore();
 
         Chronometer chronometer = (Chronometer) findViewById(R.id.time);
         chronometer.start();
 
+        /*
         boolean isConnecting = BleManager.getInstance(this).connect(this, GameStateManager.getInstance().getTeam1().get(0).id);
 
         BluetoothManager btMgr = BluetoothManager.getInstance();
@@ -192,7 +184,23 @@ public class GameInProgressActivity extends AppCompatActivity
             Thread.sleep(3000);
         } catch (Exception e) {}
         byte data[] = {0x01, 0x4b};
-        sendData(data);
+        sendData(data);*/
+    }
+
+    private void initPlayerView(final Player player, View view) {
+        if (player != null) {
+            view.setTag(player.id);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("Debug","OnClick triggered");
+                    GameStateManager.getInstance().reduceHealth(player.id);
+                }
+            });
+
+            ((TextView) view.findViewById(R.id.player_name)).setText(player.name);
+            setPlayerHealth(view, 100);
+        }
     }
 
     @Override
@@ -216,12 +224,13 @@ public class GameInProgressActivity extends AppCompatActivity
         mTeam1Views.add(findViewById(R.id.team1Player1));
         mTeam1Views.add(findViewById(R.id.team1Player2));
         mTeam1Views.add(findViewById(R.id.team1Player3));
-        mTeam1Views.add(findViewById(R.id.team1Player4));
 
-        mTeam1Views.add(findViewById(R.id.team2Player1));
-        mTeam1Views.add(findViewById(R.id.team2Player2));
-        mTeam1Views.add(findViewById(R.id.team2Player3));
-        mTeam1Views.add(findViewById(R.id.team2Player4));
+        mTeam2Views.add(findViewById(R.id.team2Player1));
+        mTeam2Views.add(findViewById(R.id.team2Player2));
+        mTeam2Views.add(findViewById(R.id.team2Player3));
+
+        mPlayers.addAll(mTeam1Views);
+        mPlayers.addAll(mTeam2Views);
     }
 
     @Override
@@ -260,6 +269,7 @@ public class GameInProgressActivity extends AppCompatActivity
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
+        findViewById(R.id.overlay).setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -270,13 +280,14 @@ public class GameInProgressActivity extends AppCompatActivity
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        findViewById(R.id.overlay).setVisibility(View.VISIBLE);
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+
+        Chronometer c = findViewById(R.id)
     }
 
     /**
@@ -290,51 +301,73 @@ public class GameInProgressActivity extends AppCompatActivity
 
     @Override
     public void setPlayerHealth(String playerId, int health) {
-        int threeQuartersSizePixel = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_75)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
-        int halfSizePixel = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_50)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
-        int quarterSizePixel=Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_25)) * GameInProgressActivity.this.getResources().getDisplayMetrics().density);
-
-        int fullSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size)));
-        int threeQuartersSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_75)));
-        int halfSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_50)));
-        int quarterSize=Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_25)));
-        for(View v : mTeam1Views){
-            if(v.getTag() != null && v.getTag().equals(playerId)){
-                ImageView playerHealth = (ImageView) v.findViewById(R.id.playerHealth);
-                View playerPortrait = v.findViewById(R.id.player_portrait);
-                if(health == 100){
-                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize,fullSize));
-                    playerHealth.setY(playerPortrait.getY());
-                    Log.d("Debug","Set health to 100");
-                }else if(50 < health && health <= 75){
-                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, threeQuartersSize));
-                    playerHealth.setY(playerPortrait.getY() + quarterSizePixel);
-                    Log.d("Debug","Set health to 75");
-                }else if(25 < health && health <= 50){
-                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, halfSize));
-                    playerHealth.setY(playerPortrait.getY() + halfSizePixel);
-                    Log.d("Debug","Set health to 50");
-                }else if(0< health && health <= 25){
-                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, quarterSize));
-                    playerHealth.setY(playerPortrait.getY() + threeQuartersSizePixel);
-                    Log.d("Debug","Set health to 25");
-                }else{
-                    playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, 0));
-                    Log.d("Debug","Set health to 0");
-                }
+        for (View v : mPlayers) {
+            if (v.getTag() != null && v.getTag().equals(playerId)) {
+                setPlayerHealth(v, health);
             }
         }
         updateScore();
     }
 
+    private void setPlayerHealth(View v, int health) {
+        int fullSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size)));
+        int threeQuartersSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_75)));
+        int halfSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_50)));
+        int quarterSize = Math.round((GameInProgressActivity.this.getResources().getDimension(R.dimen.player_portrait_size_25)));
+
+        ImageView playerHealth = (ImageView) v.findViewById(R.id.playerHealth);
+        View playerPortrait = v.findViewById(R.id.player_portrait);
+
+        if (health == 100) {
+            playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, fullSize));
+            Log.d("Debug", "Set health to 100");
+        } else if (health == 75) {
+            playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, threeQuartersSize));
+            Log.d("Debug", "Set health to 75");
+        } else if (health == 50) {
+            playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, halfSize));
+            Log.d("Debug", "Set health to 50");
+        } else if (health == 25) {
+            playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, quarterSize));
+            Log.d("Debug", "Set health to 25");
+        } else {
+            playerHealth.setLayoutParams(new RelativeLayout.LayoutParams(fullSize, 0));
+            Log.d("Debug", "Set health to 0");
+        }
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) playerHealth.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        playerHealth.setLayoutParams(params);
+    }
+
     private void updateScore() {
         int[] scores = GameStateManager.getInstance().getScores();
+        ((TextView) findViewById(R.id.scoreTextView)).setText("Score:" + scores[0] + "-" + scores[1]);
 
     }
 
     @Override
     public void setGameEnd(int winningTeam) {
+        View viewWinner = null;
+        View viewLooser = null;
+        if(winningTeam == 1){
+            viewWinner = findViewById(R.id.team1);
+            viewLooser = findViewById(R.id.team2);
+        }else if (winningTeam == 2){
+            viewWinner = findViewById(R.id.team2);
+            viewLooser = findViewById(R.id.team1);
+        }
 
+        viewWinner.setBackgroundColor(getResources().getColor(R.color.green_overlay));
+        viewLooser.setBackgroundColor(getResources().getColor(R.color.red_overlay));
+    }
+
+    @Override
+    public void resetGameState() {
+        findViewById(R.id.team1).setBackgroundColor(Color.TRANSPARENT);
+        findViewById(R.id.team2).setBackgroundColor(Color.TRANSPARENT);
+
+        Chronometer chronometer = (Chronometer) findViewById(R.id.time);
+        chronometer.start();
     }
 
     // Utility
@@ -396,5 +429,13 @@ public class GameInProgressActivity extends AppCompatActivity
 
     protected void enableRxNotifications() {
         BleManager.getInstance(this).enableNotification(mUartService, UUID_RX, true);
+    }
+
+    public void resetMatch(View v){
+        GameStateManager.getInstance().resetGame();
+    }
+
+    public void resume(View v){
+        hide();
     }
 }

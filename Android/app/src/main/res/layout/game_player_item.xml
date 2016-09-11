@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/player_portrait_size"
                 android:layout_marginBottom="@dimen/list_item_padding"
                 android:paddingLeft="@dimen/list_item_padding"
                 android:paddingRight="@dimen/list_item_padding"
                 android:elevation="2dp"
                 android:clickable="true"
-                android:background="?attr/selectableItemBackground"
-    android:animateLayoutChanges="true">
+                android:background="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/player_portrait"
         android:layout_width="@dimen/player_portrait_size"
         android:layout_height="@dimen/player_portrait_size"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_person_outline_black_48dp"/>
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_person_outline_black_48dp"
+        android:adjustViewBounds="true"/>
 
     <ImageView
         android:id="@+id/playerHealth"
-        android:layout_width="@dimen/player_portrait_size"
-        android:layout_height="@dimen/player_portrait_size"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_centerVertical="true"
-        android:baselineAlignBottom="true"
-        android:background="#804CAF50"/>
+        android:layout_alignParentBottom="true"
+        android:adjustViewBounds="true"
+        android:background="#804CAF50"
+        />
 
     <TextView
         android:id="@+id/player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
-        android:text="Player name"
+        android:text="-"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/player_portrait"/>

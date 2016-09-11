@@ -65,12 +65,13 @@
                 android:layout_weight="2">
 
                 <Button
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_centerInParent="true"
-
+                    android:background="@drawable/round_button"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:text="Start"
+                    android:textSize="20sp"
                     android:onClick="startGame"
                     />
 

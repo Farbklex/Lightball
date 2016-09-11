@@ -1,8 +1,11 @@
 package io.lightball.lightball;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import io.lightball.lightball.entities.Player;
+import io.lightball.lightball.interfaces.GameStateInterface;
 
 /**
  * Created by Alexander Hoffmann on 10.09.16.
@@ -10,6 +13,8 @@ import io.lightball.lightball.entities.Player;
 public class GameStateManager{
     private ArrayList<Player> mTeam1;
     private ArrayList<Player> mTeam2;
+
+    private GameStateInterface mCallback;
 
     boolean mGameEnded = false;
     int mWinningTeam = 0;
@@ -24,14 +29,32 @@ public class GameStateManager{
     }
 
     public void reduceHealth(String playerId){
+        Log.d("Debug","Reduce health in GameStateManager triggered");
+        int newHealth = 0;
         for(Player p : mTeam1){
-            if(p.id.equals(playerId)) p.health = p.health - 25;
+            if(p.id != null && p.id.equals(playerId)){
+                p.health = p.health - 25;
+                newHealth = p.health;
+            }
         }
 
         for(Player p : mTeam2){
-            if(p.id.equals(playerId)) p.health = p.health - 25;
+            if(p.id != null && p.id.equals(playerId)){
+                p.health = p.health - 25;
+                newHealth = p.health;
+            }
         }
+
+        //Update the UI
+        Log.d("Debug","Calling setPlayerHealth in UI with " + newHealth + "HP.");
+        mCallback.setPlayerHealth(playerId, newHealth);
+
         checkIfGameEnds();
+        sendHealthToShirt();
+    }
+
+    private void sendHealthToShirt() {
+        //TODO: Bluetooth Code
     }
 
     /**
@@ -56,16 +79,15 @@ public class GameStateManager{
             mGameEnded = true;
 
             if(alivePlayersTeam1 == 0){
-                mWinningTeam = 1;
-                return 1;
+                mWinningTeam = 2;
             }
 
             if(alivePlayersTeam2 == 0){
-                mWinningTeam = 2;
-                return 2;
+                mWinningTeam = 1;
             }
         }
-        return 0;
+        {mCallback.setGameEnd(mWinningTeam);}
+        return mWinningTeam;
     }
 
     public ArrayList<Player> getTeam1() {
@@ -97,19 +119,31 @@ public class GameStateManager{
      */
     public void resetGame(){
         for(Player p : mTeam1){
-            p.health = 100;
+            setHealth(p, 100);
         }
 
         for(Player p : mTeam2){
-            p.health = 100;
+            setHealth(p, 100);
         }
 
+        mCallback.resetGameState();
         mGameEnded = false;
         mWinningTeam = 0;
     }
 
-    public void setCallback(){
+    /**
+     * Sets a players health to specific value in the GameStateManager, UI and shirt
+     * @param player
+     * @param health
+     */
+    private void setHealth(Player player, int health) {
+        player.health = 100;
+        mCallback.setPlayerHealth(player.id, health);
+        sendHealthToShirt();
+    }
 
+    public void setCallback(GameStateInterface callback){
+        mCallback = callback;
     }
 
     /**
@@ -120,14 +154,17 @@ public class GameStateManager{
         int[] scores = {0,0};
         int score1 = 0;
         int score2 = 0;
-        for(Player p : mTeam1){
-            score1 += p.health;
+        if(mTeam1 != null && mTeam2 != null){
+            for(Player p : mTeam1){
+                score1 += p.health;
+            }
+            scores[0] = score1;
+            for(Player p : mTeam2){
+                score2 += p.health;
+            }
+            scores[1] = score2;
         }
-        scores[0] = score1;
-        for(Player p : mTeam2){
-            score2 += p.health;
-        }
-        scores[1] = score2;
         return scores;
+
     }
 }

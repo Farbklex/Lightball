@@ -8,4 +8,6 @@ public interface GameStateInterface{
     void setPlayerHealth(String playerId, int health);
 
     void setGameEnd(int winningTeam);
+
+    void resetGameState();
 }
